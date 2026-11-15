@@ -1,0 +1,108 @@
+/* ==========================================================================
+   SPY-QQQ Holdings — Narrow screen
+   Every rule here applies at 720px and below. The stylesheet link in
+   index.html carries the condition, and that link comes after css/style.css.
+   ========================================================================== */
+
+/* The DockPort mark stays on a phone. The label leaves the screen but stays
+   in the accessibility tree, so the link keeps its name. */
+.topbar__link {
+  justify-content: center;
+  min-block-size: 44px;
+  min-inline-size: 44px;
+}
+
+.topbar__link span {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The heading and the status take one line each. */
+.board-head {
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.board-status {
+  flex-basis: 100%;
+  margin-inline-start: 0;
+  text-align: start;
+}
+
+/* A field under 16px makes the browser zoom the whole page on focus. */
+.search__input {
+  font-size: 1rem;
+}
+
+/* One panel at a time. The page scrolls, not the panel. */
+.board {
+  grid-template-columns: 1fr;
+}
+
+.fund-panel {
+  max-block-size: none;
+}
+
+.fund-panel__scroll {
+  overflow: visible;
+}
+
+.fund-panel__scroll thead th {
+  position: static;
+  background: var(--bg-raised);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.fund-panel__head {
+  padding: var(--space-4);
+}
+
+/* The cells take a tight inset, so the name keeps its room. */
+.table th,
+.table td {
+  padding-inline: var(--space-2);
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-inline-start: var(--space-4);
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-inline-end: var(--space-4);
+}
+
+.holding {
+  gap: var(--space-2);
+}
+
+/* The number carries the weight on a narrow screen. The bar would crowd it. */
+.holding__bar {
+  display: none;
+}
+
+.holding__pct {
+  inline-size: auto;
+}
+
+.footer__inner {
+  align-items: flex-start;
+}
+
+@media (max-width: 480px) {
+  /* The row order still reads down the list without the rank column. */
+  .table .col-rank {
+    display: none;
+  }
+
+  .fund-panel__name {
+    font-size: var(--text-md);
+  }
+}

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" data-app-state="loading">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b0b0d" />
+    <title>SPY-QQQ Holdings</title>
+    <meta
+      name="description"
+      content="Every holding in SPY and QQQ, with its weight."
+    />
+    <link rel="icon" type="image/svg+xml" href="css/spy-qqq.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Geist+Mono:wght@400;500&display=swap"
+    />
+
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/dots.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="css/mobile.css"
+      media="(max-width: 720px)"
+    />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <a class="brand__logo-link" href="./" aria-label="SPY-QQQ Holdings">
+            <span class="brand__mark" aria-hidden="true"
+              ><span></span><span></span
+            ></span>
+          </a>
+          <span class="brand__name">SPY-QQQ <span>Holdings</span></span>
+        </div>
+        <div class="topbar__meta">
+          <a
+            class="topbar__link"
+            href="https://github.com/DOCKPORT/spy-qqq-holdings"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>DockPort</span>
+            <img
+              class="topbar__icon"
+              src="css/github.svg"
+              alt=""
+              width="28"
+              height="28"
+            />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container" id="app">
+      <section class="section hero animate-rise">
+        <p class="eyebrow">US index ETFs</p>
+        <h1>SPY and QQQ, stock by stock.</h1>
+        <p class="hero__lede">
+          Every holding and its weight, from the latest issuer and SEC files.
+          Search both funds at once.
+        </p>
+      </section>
+
+      <section class="section animate-rise" aria-labelledby="holdings-title">
+        <div class="board-head">
+          <h2 id="holdings-title">Holdings</h2>
+          <p
+            class="board-status"
+            id="holdings-status"
+            role="status"
+            aria-live="polite"
+          >
+            Loading the holdings.
+          </p>
+        </div>
+
+        <label class="visually-hidden" for="holdings-search"
+          >Search SPY and QQQ holdings</label
+        >
+        <div class="search">
+          <input
+            class="search__input"
+            id="holdings-search"
+            type="search"
+            name="q"
+            placeholder="Search SPY and QQQ by symbol or name"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <div class="board" id="holdings-board">
+          <article
+            class="fund-panel"
+            id="spy-panel"
+            aria-labelledby="spy-name"
+          >
+            <header class="fund-panel__head">
+              <div class="fund-panel__top">
+                <span class="fund-panel__ticker">SPY</span>
+                <h3 class="fund-panel__name" id="spy-name">SPY</h3>
+                <span class="fund-panel__count" id="spy-count">&mdash;</span>
+              </div>
+              <p class="fund-panel__meta">
+                <span
+                  >Holdings as of
+                  <span class="numeric" id="spy-date">&mdash;</span></span
+                >
+                <span class="fund-panel__dot" aria-hidden="true"
+                  >&middot;</span
+                >
+                <span id="spy-source">&mdash;</span>
+              </p>
+              <p class="fund-panel__note" id="spy-note"></p>
+            </header>
+
+            <div
+              class="fund-panel__scroll"
+              id="spy-scroll"
+              role="region"
+              aria-labelledby="spy-name"
+              tabindex="0"
+            >
+              <table class="table">
+                <caption class="visually-hidden">
+                  SPY holdings and weights
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col" class="col-rank">Rank</th>
+                    <th scope="col" class="col-asset">Holding</th>
+                    <th scope="col" class="is-numeric">Weight</th>
+                  </tr>
+                </thead>
+                <tbody id="spy-rows"></tbody>
+              </table>
+              <p
+                class="fund-panel__empty"
+                id="spy-empty"
+                role="status"
+                hidden
+              >
+                No match in SPY.
+              </p>
+            </div>
+            <p
+              class="fund-panel__error"
+              id="spy-error"
+              role="alert"
+              hidden
+            ></p>
+          </article>
+
+          <article
+            class="fund-panel fund-panel--qqq"
+            id="qqq-panel"
+            aria-labelledby="qqq-name"
+          >
+            <header class="fund-panel__head">
+              <div class="fund-panel__top">
+                <span class="fund-panel__ticker">QQQ</span>
+                <h3 class="fund-panel__name" id="qqq-name">QQQ</h3>
+                <span class="fund-panel__count" id="qqq-count">&mdash;</span>
+              </div>
+              <p class="fund-panel__meta">
+                <span
+                  >Holdings as of
+                  <span class="numeric" id="qqq-date">&mdash;</span></span
+                >
+                <span class="fund-panel__dot" aria-hidden="true"
+                  >&middot;</span
+                >
+                <span id="qqq-source">&mdash;</span>
+              </p>
+              <p class="fund-panel__note" id="qqq-note"></p>
+            </header>
+
+            <div
+              class="fund-panel__scroll"
+              id="qqq-scroll"
+              role="region"
+              aria-labelledby="qqq-name"
+              tabindex="0"
+            >
+              <table class="table">
+                <caption class="visually-hidden">
+                  QQQ holdings and weights
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col" class="col-rank">Rank</th>
+                    <th scope="col" class="col-asset">Holding</th>
+                    <th scope="col" class="is-numeric">Weight</th>
+                  </tr>
+                </thead>
+                <tbody id="qqq-rows"></tbody>
+              </table>
+              <p
+                class="fund-panel__empty"
+                id="qqq-empty"
+                role="status"
+                hidden
+              >
+                No match in QQQ.
+              </p>
+            </div>
+            <p
+              class="fund-panel__error"
+              id="qqq-error"
+              role="alert"
+              hidden
+            ></p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <span>SPY-QQQ Holdings</span>
+        <span class="footer__credit">
+          Holdings data by
+          <a
+            class="footer__link"
+            href="https://tickerinside.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >TickerInside</a
+          >
+          under
+          <a
+            class="footer__link"
+            href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >CC BY 4.0</a
+          >.
+          <a
+            class="footer__link"
+            id="spy-credit"
+            href="https://tickerinside.com/etf/spy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >SPY source</a
+          >
+          <span aria-hidden="true">&middot;</span>
+          <a
+            class="footer__link"
+            id="qqq-credit"
+            href="https://tickerinside.com/etf/qqq/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >QQQ source</a
+          >
+        </span>
+        <span class="numeric" id="footer-year"></span>
+      </div>
+    </footer>
+
+    <!-- The page has no build step. Serve this folder over HTTP, because the
+         data layer reads the two snapshots with fetch. -->
+    <script>
+      window.setTimeout(() => {
+        if (document.documentElement.dataset.appState !== "loading") {
+          return;
+        }
+        const status = document.getElementById("holdings-status");
+        if (status) {
+          status.textContent =
+            "The page scripts did not run. Read the browser console for the cause.";
+        }
+      }, 2000);
+    </script>
+
+    <script src="js/data.js"></script>
+    <script src="js/render-list.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

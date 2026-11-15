@@ -1,0 +1,1 @@
+tickerinside==0.6.0
