@@ -1,0 +1,12 @@
+# Vercel serves the static UI only. The Python fetch tooling is not part of
+# the deployment.
+requirements.txt
+scripts/
+run.sh
+.venv/
+memory-bank/
+.vscode/
+.ruff_cache/
+logos/
+__pycache__/
+*.pyc
