@@ -2,7 +2,7 @@
 
 [![Update holdings data](https://github.com/DOCKPORT/spy-qqq-holdings/actions/workflows/update-holdings.yml/badge.svg?branch=main)](https://github.com/DOCKPORT/spy-qqq-holdings/actions/workflows/update-holdings.yml)
 
-A static web app that shows every holding in SPY and QQQ, with its weight. It also shows the sector mix for each fund.
+A web app that shows every holding in SPY and QQQ, with its weight. It also shows the sector mix for each fund.
 
 - Vercel deployment: https://spy-qqq-holdings.vercel.app/ 
 
