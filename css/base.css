@@ -28,32 +28,6 @@ html {
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
-/* A thin, floating scrollbar. The track stays clear, and the thumb takes a
-   transparent border, so only a slim centre line shows. */
-html::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-html::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-
-html::-webkit-scrollbar-thumb {
-  border: 2px solid transparent;
-  border-radius: var(--radius-xs);
-  background-color: var(--scrollbar-thumb);
-  background-clip: content-box;
-}
-
-html::-webkit-scrollbar-thumb:hover {
-  background-color: var(--text-faint);
-}
-
-html::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
 body {
   min-height: 100dvh;
   background-color: var(--bg-page);
@@ -145,19 +119,6 @@ p {
   letter-spacing: -0.01em;
 }
 
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-medium);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  color: var(--text-faint);
-}
-
-.text-muted {
-  color: var(--text-muted);
-}
-
 /* --- Layout --------------------------------------------------------------- */
 .container {
   width: 100%;
@@ -173,57 +134,9 @@ p {
   padding-block: var(--space-7);
 }
 
-/* The page shows no rule between two bands. The gap alone divides them. The
-   first band takes a shorter top space, because the top bar holds it. The
-   bottom space stays tight, because the metric card and the control row read
-   as one block. */
+/* The first band takes a shorter top space, because the top bar holds it. */
 .section:first-of-type {
   padding-block-start: var(--space-6);
   padding-block-end: var(--space-6);
 }
 
-/* A band that follows another band takes a short top space. The control row
-   then sits close under the metric card. */
-.section + .section {
-  padding-block-start: var(--space-4);
-}
-
-.section-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-3);
-  margin-block-end: var(--space-5);
-}
-
-/* The title row doubles as a control group. The base reset clears the button.
-   The font is pinned here. A heading parent must not leak its own metrics. */
-.section-head__btn {
-  display: inline-flex;
-  align-items: center;
-  min-block-size: 44px;
-  padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  /* The control sits over the dot field. The fill stays opaque, so a dot never
-     shows through the button. The control takes the fill of the metric card,
-     so the two read as one family. One value covers every state. */
-  background: var(--bg-surface);
-  font-family: var(--font-display);
-  font-size: var(--text-md);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-tight);
-  letter-spacing: normal;
-  text-align: start;
-  white-space: nowrap;
-}
-
-/* The selected control takes the accent. Its pair stays grey. */
-.section-head__btn[aria-pressed="true"] {
-  border-color: var(--accent-line);
-}
-
-.section-head__btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}

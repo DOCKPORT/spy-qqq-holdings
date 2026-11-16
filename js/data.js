@@ -112,22 +112,31 @@
   };
 
   /**
-   * Read one fund snapshot.
-   * @param {FundConfig} config - The fund ticker and path.
-   * @returns {Promise<Fund>} The fund.
+   * Read one JSON object from a URL.
+   * @param {string} url - The file path.
+   * @returns {Promise<Record<string, unknown>>} The object.
    */
-  const loadFund = async (config) => {
-    const response = await fetch(config.url, REVALIDATE);
+  const readJson = async (url) => {
+    const response = await fetch(url, REVALIDATE);
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status} from ${config.url}.`);
+      throw new Error(`HTTP ${response.status} from ${url}.`);
     }
 
     /** @type {unknown} */
     const payload = await response.json();
     if (typeof payload !== "object" || payload === null) {
-      throw new Error(`${config.url} holds no object.`);
+      throw new Error(`${url} holds no object.`);
     }
-    const raw = /** @type {Record<string, unknown>} */ (payload);
+    return /** @type {Record<string, unknown>} */ (payload);
+  };
+
+  /**
+   * Read one fund snapshot.
+   * @param {FundConfig} config - The fund ticker and path.
+   * @returns {Promise<Fund>} The fund.
+   */
+  const loadFund = async (config) => {
+    const raw = await readJson(config.url);
     if (typeof raw.name !== "string" || !Array.isArray(raw.holdings)) {
       throw new Error(`${config.url} holds no fund name or holdings list.`);
     }
@@ -164,17 +173,7 @@
    * @returns {Promise<SectorFund>} The sector fund.
    */
   const loadSectorFund = async (config) => {
-    const response = await fetch(config.url, REVALIDATE);
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status} from ${config.url}.`);
-    }
-
-    /** @type {unknown} */
-    const payload = await response.json();
-    if (typeof payload !== "object" || payload === null) {
-      throw new Error(`${config.url} holds no object.`);
-    }
-    const raw = /** @type {Record<string, unknown>} */ (payload);
+    const raw = await readJson(config.url);
     if (typeof raw.name !== "string" || !Array.isArray(raw.sectors)) {
       throw new Error(`${config.url} holds no fund name or sector list.`);
     }

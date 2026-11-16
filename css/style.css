@@ -275,15 +275,20 @@
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
+/* The page and each panel share one thin scrollbar. The track stays clear,
+   and the thumb takes a transparent border, so only a slim centre line shows. */
+html::-webkit-scrollbar,
 .fund-panel__scroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
+html::-webkit-scrollbar-track,
 .fund-panel__scroll::-webkit-scrollbar-track {
   background: var(--scrollbar-track);
 }
 
+html::-webkit-scrollbar-thumb,
 .fund-panel__scroll::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: var(--radius-xs);
@@ -291,10 +296,12 @@
   background-clip: content-box;
 }
 
+html::-webkit-scrollbar-thumb:hover,
 .fund-panel__scroll::-webkit-scrollbar-thumb:hover {
   background-color: var(--text-faint);
 }
 
+html::-webkit-scrollbar-corner,
 .fund-panel__scroll::-webkit-scrollbar-corner {
   background: transparent;
 }
