@@ -41,34 +41,6 @@
   min-width: 0;
 }
 
-.brand__logo-link {
-  display: flex;
-  flex-shrink: 0;
-  text-decoration: none;
-}
-
-/* The signature mark: two flat blocks, purple and teal. */
-.brand__mark {
-  display: flex;
-  flex: none;
-  inline-size: 28px;
-  block-size: 28px;
-  gap: 3px;
-}
-
-.brand__mark span {
-  display: block;
-  flex: 1 1 0;
-}
-
-.brand__mark span:first-child {
-  background: var(--accent);
-}
-
-.brand__mark span:last-child {
-  background: var(--accent-alt);
-}
-
 .brand__name {
   font-size: var(--text-md);
   font-weight: var(--weight-bold);
@@ -106,26 +78,6 @@
   opacity: 0.7;
 }
 
-/* --- Hero ----------------------------------------------------------------- */
-.hero {
-  padding-block: var(--space-8) var(--space-6);
-}
-
-.hero .eyebrow {
-  margin-block-end: var(--space-3);
-}
-
-.hero h1 {
-  max-width: 24ch;
-  margin-block-end: var(--space-4);
-}
-
-.hero__lede {
-  max-width: 62ch;
-  color: var(--text-muted);
-  font-size: var(--text-md);
-}
-
 /* --- Section head --------------------------------------------------------- */
 .board-head {
   display: flex;
@@ -146,6 +98,58 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   text-align: end;
+}
+
+/* --- View toggle ---------------------------------------------------------- */
+.view-toggle {
+  display: inline-flex;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+}
+
+.view-toggle__btn {
+  min-block-size: 36px;
+  padding-inline: var(--space-3);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.view-toggle__btn + .view-toggle__btn {
+  border-inline-start: 1px solid var(--border);
+}
+
+.view-toggle__btn:first-child {
+  border-start-start-radius: var(--radius-md);
+  border-end-start-radius: var(--radius-md);
+}
+
+.view-toggle__btn:last-child {
+  border-start-end-radius: var(--radius-md);
+  border-end-end-radius: var(--radius-md);
+}
+
+.view-toggle__btn[aria-pressed="true"] {
+  background: var(--bg-raised);
+  color: var(--text-primary);
+}
+
+.view-toggle__btn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.view-toggle__btn:not(:disabled):active {
+  color: var(--text-primary);
 }
 
 /* --- Search --------------------------------------------------------------- */
@@ -188,13 +192,12 @@
 }
 
 .fund-panel {
-  --fund-accent: var(--accent);
+  --fund-accent: var(--accent-spy);
   display: flex;
   flex-direction: column;
   min-inline-size: 0;
   max-block-size: clamp(420px, calc(100dvh - 320px), 760px);
   border: 1px solid var(--border-subtle);
-  border-block-start: 2px solid var(--fund-accent);
   border-radius: var(--radius-lg);
   background: var(--bg-surface);
   overflow: hidden;
@@ -246,6 +249,10 @@
   white-space: nowrap;
 }
 
+.fund-panel__toggle {
+  display: none;
+}
+
 .fund-panel__meta {
   display: flex;
   flex-wrap: wrap;
@@ -258,12 +265,6 @@
 
 .fund-panel__dot {
   color: var(--border-strong);
-}
-
-.fund-panel__note {
-  margin-block-start: var(--space-2);
-  color: var(--text-muted);
-  font-size: var(--text-xs);
 }
 
 .fund-panel__scroll {
@@ -368,6 +369,11 @@
   overflow-wrap: anywhere;
 }
 
+.holding-row--sector .holding__name {
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
+}
+
 .holding__weight {
   display: flex;
   align-items: center;
@@ -388,6 +394,7 @@
 .holding__bar-fill {
   display: block;
   block-size: 100%;
+  min-inline-size: 2px;
   inline-size: 0;
   background: var(--fund-accent);
 }
@@ -400,10 +407,6 @@
   font-variant-numeric: tabular-nums;
   font-size: var(--text-xs);
   text-align: end;
-}
-
-.holding-row--zero .holding__pct {
-  color: var(--text-faint);
 }
 
 /* --- Empty and error ------------------------------------------------------ */
@@ -447,11 +450,6 @@
   justify-content: space-between;
 }
 
-.footer__link {
-  color: inherit;
-  text-decoration: none;
-}
-
 .footer__credit {
   max-width: 76ch;
   line-height: var(--leading-snug);
@@ -478,12 +476,6 @@
 
   .topbar__link:hover .topbar__icon {
     opacity: 1;
-  }
-
-  .footer__link:hover {
-    color: var(--text-muted);
-    text-decoration: underline;
-    text-decoration-color: currentColor;
   }
 
   .search__input:hover {

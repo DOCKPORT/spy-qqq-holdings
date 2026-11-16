@@ -46,6 +46,7 @@
 
 .fund-panel {
   max-block-size: none;
+  overflow: clip;
 }
 
 .fund-panel__scroll {
@@ -60,7 +61,46 @@
 }
 
 .fund-panel__head {
+  position: sticky;
+  inset-block-start: calc(60px + env(safe-area-inset-top));
+  z-index: var(--z-raised);
   padding: var(--space-4);
+}
+
+.fund-panel__toggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 36px;
+  min-inline-size: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.fund-panel__toggle:active {
+  color: var(--text-primary);
+}
+
+.fund-panel__chevron {
+  display: block;
+  inline-size: 8px;
+  block-size: 8px;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.fund-panel__toggle[aria-expanded="true"] .fund-panel__chevron {
+  transform: rotate(-135deg);
+}
+
+.fund-panel[data-collapsed="true"] .fund-panel__scroll {
+  display: none;
 }
 
 /* The cells take a tight inset, so the name keeps its room. */

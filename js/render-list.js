@@ -6,20 +6,33 @@
  * @typedef {object} FundRefs
  * @property {HTMLElement} root - The fund panel.
  * @property {HTMLElement} name - The fund name.
- * @property {HTMLElement} count - The holding count.
+ * @property {HTMLElement} count - The row count.
  * @property {HTMLElement} date - The holdings date.
  * @property {HTMLElement} source - The source label.
- * @property {HTMLElement} note - The source note.
+ * @property {HTMLElement} caption - The table caption.
  * @property {HTMLElement} scroll - The scroll region.
+ * @property {HTMLButtonElement} toggle - The collapse button.
  * @property {HTMLElement} body - The table body.
  * @property {HTMLElement} empty - The no-match line.
  * @property {HTMLElement} error - The error line.
  */
 
 /**
+ * @typedef {object} PanelItem
+ * @property {string} primary - The ticker or sector label.
+ * @property {string} [secondary] - The company name for a stock row.
+ * @property {number} weightPct - The weight in percent.
+ * @property {string} searchText - The search text.
+ */
+
+/**
+ * @typedef {"stocks" | "sectors"} ViewKind
+ */
+
+/**
  * @typedef {object} Row
  * @property {HTMLTableRowElement} element - The table row.
- * @property {string} haystack - The lower-case symbol and name.
+ * @property {string} haystack - The lower-case search text.
  */
 
 /**
@@ -36,7 +49,8 @@
 
 /**
  * @typedef {object} ListNamespace
- * @property {(fund: Fund, refs: FundRefs, maxWeight: number) => FundList} [renderFund] - Draw one fund.
+ * @property {(fund: Fund, refs: FundRefs, maxWeight: number) => FundList} [renderFund] - Draw one stock fund.
+ * @property {(fund: SectorFund, refs: FundRefs, maxWeight: number) => FundList} [renderSectorFund] - Draw one sector fund.
  * @property {(config: FundConfig, refs: FundRefs, error: unknown) => void} [renderFundError] - Report a failed fund.
  */
 
@@ -51,12 +65,6 @@
   const SOURCE_LABELS = {
     issuer: "Issuer file",
     sec_nport: "SEC Form N-PORT",
-  };
-
-  /** @type {Record<string, string>} */
-  const SOURCE_NOTES = {
-    issuer: "The issuer file usually covers the prior trading day.",
-    sec_nport: "Quarterly SEC filing. This portfolio can be months old.",
   };
 
   const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
@@ -85,23 +93,27 @@
   /**
    * Write a count with the correct noun.
    * @param {number} count - The row count.
+   * @param {ViewKind} kind - The view kind.
    * @returns {string} The label.
    */
-  const holdingLabel = (count) =>
-    `${count} holding${count === 1 ? "" : "s"}`;
+  const countLabel = (count, kind) => {
+    const noun = kind === "sectors" ? "sector" : "holding";
+    return `${count} ${noun}${count === 1 ? "" : "s"}`;
+  };
 
   /**
    * Build one row.
-   * @param {Holding} holding - The holding.
+   * @param {PanelItem} item - The row data.
    * @param {number} rank - The rank in the fund.
    * @param {number} maxWeight - The largest weight in both funds.
+   * @param {ViewKind} kind - The view kind.
    * @returns {Row} The row and its search text.
    */
-  const buildRow = (holding, rank, maxWeight) => {
+  const buildRow = (item, rank, maxWeight, kind) => {
     const row = document.createElement("tr");
     row.className = "holding-row";
-    if (!(holding.weightPct > 0)) {
-      row.classList.add("holding-row--zero");
+    if (kind === "sectors") {
+      row.classList.add("holding-row--sector");
     }
 
     const rankCell = document.createElement("td");
@@ -115,13 +127,21 @@
     assetCell.className = "col-asset";
     const wrap = document.createElement("div");
     wrap.className = "holding";
-    const symbol = document.createElement("span");
-    symbol.className = "holding__sym";
-    symbol.textContent = holding.symbol;
-    const name = document.createElement("span");
-    name.className = "holding__name";
-    name.textContent = holding.name;
-    wrap.append(symbol, name);
+
+    if (item.secondary !== undefined) {
+      const symbol = document.createElement("span");
+      symbol.className = "holding__sym";
+      symbol.textContent = item.primary;
+      const name = document.createElement("span");
+      name.className = "holding__name";
+      name.textContent = item.secondary;
+      wrap.append(symbol, name);
+    } else {
+      const name = document.createElement("span");
+      name.className = "holding__name";
+      name.textContent = item.primary;
+      wrap.append(name);
+    }
     assetCell.append(wrap);
 
     const weightCell = document.createElement("td");
@@ -131,41 +151,49 @@
     const bar = document.createElement("span");
     bar.className = "holding__bar";
     bar.setAttribute("aria-hidden", "true");
+    bar.title = "Bars use a square-root scale.";
     const fill = document.createElement("span");
     fill.className = "holding__bar-fill";
-    const share = maxWeight > 0 ? (holding.weightPct / maxWeight) * 100 : 0;
-    fill.style.width = `${Math.max(0, Math.min(100, share)).toFixed(2)}%`;
+    /* The square-root scale gives the small weights more range. */
+    const ratio = maxWeight > 0 ? item.weightPct / maxWeight : 0;
+    const share = Math.sqrt(Math.max(0, ratio)) * 100;
+    fill.style.width = `${Math.min(100, share).toFixed(2)}%`;
     bar.append(fill);
     const percent = document.createElement("span");
     percent.className = "holding__pct numeric";
-    percent.textContent = `${holding.weightPct.toFixed(2)}%`;
+    const percentValue =
+      item.weightPct < 0.01
+        ? item.weightPct.toFixed(4)
+        : item.weightPct.toFixed(2);
+    percent.textContent = `${percentValue}%`;
     weightWrap.append(bar, percent);
     weightCell.append(weightWrap);
     row.append(rankCell, assetCell, weightCell);
 
     return {
       element: row,
-      haystack: `${holding.symbol} ${holding.name}`.toLowerCase(),
+      haystack: item.searchText.toLowerCase(),
     };
   };
 
   /**
-   * Draw one fund panel.
-   * @param {Fund} fund - The fund.
+   * Draw one panel.
+   * @param {PanelItem[]} items - The row data.
+   * @param {Fund | SectorFund} fund - The fund.
    * @param {FundRefs} refs - The panel elements.
    * @param {number} maxWeight - The largest weight in both funds.
+   * @param {ViewKind} kind - The view kind.
    * @returns {FundList} The list filter.
    */
-  const renderFund = (fund, refs, maxWeight) => {
-    const holdings = [...fund.holdings].sort(
-      (a, b) => b.weightPct - a.weightPct,
-    );
+  const renderPanel = (items, fund, refs, maxWeight, kind) => {
+    const rowsData = [...items]
+      .filter((item) => item.weightPct !== 0)
+      .sort((a, b) => b.weightPct - a.weightPct);
 
     refs.name.textContent = fund.name;
     refs.date.textContent = formatDate(fund.holdingsAsOf);
     refs.source.textContent =
       SOURCE_LABELS[fund.source] || fund.source || "Unknown source";
-    refs.note.textContent = SOURCE_NOTES[fund.source] || "";
     refs.root.classList.remove("fund-panel--error");
     refs.error.hidden = true;
     refs.scroll.hidden = false;
@@ -173,8 +201,8 @@
 
     const fragment = document.createDocumentFragment();
     /** @type {Row[]} */
-    const rows = holdings.map((holding, index) => {
-      const row = buildRow(holding, index + 1, maxWeight);
+    const rows = rowsData.map((item, index) => {
+      const row = buildRow(item, index + 1, maxWeight, kind);
       fragment.append(row.element);
       return row;
     });
@@ -183,7 +211,7 @@
     const total = rows.length;
     const setCount = (visible) => {
       refs.count.textContent =
-        visible === total ? holdingLabel(total) : `${visible} of ${total}`;
+        visible === total ? countLabel(total, kind) : `${visible} of ${total}`;
     };
     setCount(total);
 
@@ -208,6 +236,39 @@
   };
 
   /**
+   * Draw one stock fund.
+   * @param {Fund} fund - The fund.
+   * @param {FundRefs} refs - The panel elements.
+   * @param {number} maxWeight - The largest weight in both funds.
+   * @returns {FundList} The list filter.
+   */
+  const renderFund = (fund, refs, maxWeight) => {
+    const items = fund.holdings.map((holding) => ({
+      primary: holding.symbol,
+      secondary: holding.name,
+      weightPct: holding.weightPct,
+      searchText: `${holding.symbol} ${holding.name}`,
+    }));
+    return renderPanel(items, fund, refs, maxWeight, "stocks");
+  };
+
+  /**
+   * Draw one sector fund.
+   * @param {SectorFund} fund - The sector fund.
+   * @param {FundRefs} refs - The panel elements.
+   * @param {number} maxWeight - The largest sector weight in both funds.
+   * @returns {FundList} The list filter.
+   */
+  const renderSectorFund = (fund, refs, maxWeight) => {
+    const items = fund.sectors.map((sector) => ({
+      primary: sector.label,
+      weightPct: sector.weightPct,
+      searchText: `${sector.label} ${sector.key}`,
+    }));
+    return renderPanel(items, fund, refs, maxWeight, "sectors");
+  };
+
+  /**
    * Report a fund that did not load.
    * @param {FundConfig} config - The fund config.
    * @param {FundRefs} refs - The panel elements.
@@ -220,7 +281,6 @@
     refs.count.textContent = "\u2014";
     refs.date.textContent = "\u2014";
     refs.source.textContent = "Unavailable";
-    refs.note.textContent = "";
     refs.body.replaceChildren();
     refs.empty.hidden = true;
     refs.error.hidden = false;
@@ -230,5 +290,6 @@
   };
 
   ns.renderFund = renderFund;
+  ns.renderSectorFund = renderSectorFund;
   ns.renderFundError = renderFundError;
 })();

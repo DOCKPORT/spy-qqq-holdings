@@ -1,0 +1,66 @@
+{
+  "ticker": "SPY",
+  "name": "SPDR S&P 500 ETF Trust",
+  "holdingsAsOf": "2026-11-12",
+  "source": "issuer",
+  "sectorCoveragePct": 100.0,
+  "noSectorPct": 0.0,
+  "weightSumPct": 99.8713,
+  "sectors": [
+    {
+      "key": "technology",
+      "label": "Technology",
+      "weightPct": 36.1123
+    },
+    {
+      "key": "financials",
+      "label": "Financials",
+      "weightPct": 12.4821
+    },
+    {
+      "key": "health_care",
+      "label": "Health care",
+      "weightPct": 10.3637
+    },
+    {
+      "key": "consumer_discretionary",
+      "label": "Consumer discretionary",
+      "weightPct": 9.5159
+    },
+    {
+      "key": "communication_services",
+      "label": "Communication services",
+      "weightPct": 8.8715
+    },
+    {
+      "key": "industrials",
+      "label": "Industrials",
+      "weightPct": 8.2066
+    },
+    {
+      "key": "consumer_staples",
+      "label": "Consumer staples",
+      "weightPct": 5.0762
+    },
+    {
+      "key": "energy",
+      "label": "Energy",
+      "weightPct": 3.5716
+    },
+    {
+      "key": "utilities",
+      "label": "Utilities",
+      "weightPct": 2.0966
+    },
+    {
+      "key": "real_estate",
+      "label": "Real estate",
+      "weightPct": 1.844
+    },
+    {
+      "key": "materials",
+      "label": "Materials",
+      "weightPct": 1.7308
+    }
+  ]
+}

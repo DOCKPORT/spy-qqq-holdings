@@ -1,0 +1,61 @@
+{
+  "ticker": "QQQ",
+  "name": "Invesco QQQ Trust",
+  "holdingsAsOf": "2026-06-30",
+  "source": "sec_nport",
+  "sectorCoveragePct": 100.0,
+  "noSectorPct": 0.0,
+  "weightSumPct": 99.927,
+  "sectors": [
+    {
+      "key": "technology",
+      "label": "Technology",
+      "weightPct": 60.4839
+    },
+    {
+      "key": "communication_services",
+      "label": "Communication services",
+      "weightPct": 12.7694
+    },
+    {
+      "key": "consumer_discretionary",
+      "label": "Consumer discretionary",
+      "weightPct": 10.6532
+    },
+    {
+      "key": "consumer_staples",
+      "label": "Consumer staples",
+      "weightPct": 6.2283
+    },
+    {
+      "key": "health_care",
+      "label": "Health care",
+      "weightPct": 3.5528
+    },
+    {
+      "key": "industrials",
+      "label": "Industrials",
+      "weightPct": 3.4479
+    },
+    {
+      "key": "utilities",
+      "label": "Utilities",
+      "weightPct": 1.1346
+    },
+    {
+      "key": "materials",
+      "label": "Materials",
+      "weightPct": 1.0392
+    },
+    {
+      "key": "energy",
+      "label": "Energy",
+      "weightPct": 0.4527
+    },
+    {
+      "key": "financials",
+      "label": "Financials",
+      "weightPct": 0.165
+    }
+  ]
+}

@@ -137,6 +137,8 @@
   /* Accents */
   --accent: var(--sol-purple);
   --accent-alt: var(--sol-teal);
+  /* SPY takes red. QQQ takes the bright teal. */
+  --accent-spy: #ff4d4f;
   --accent-contrast: var(--grey-000);
   --negative: var(--sol-magenta);
 

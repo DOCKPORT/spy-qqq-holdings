@@ -13,7 +13,6 @@
       name="description"
       content="Every holding in SPY and QQQ, with its weight."
     />
-    <link rel="icon" type="image/svg+xml" href="css/spy-qqq.svg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,11 +36,6 @@
     <header class="topbar">
       <div class="container topbar__inner">
         <div class="brand">
-          <a class="brand__logo-link" href="./" aria-label="SPY-QQQ Holdings">
-            <span class="brand__mark" aria-hidden="true"
-              ><span></span><span></span
-            ></span>
-          </a>
           <span class="brand__name">SPY-QQQ <span>Holdings</span></span>
         </div>
         <div class="topbar__meta">
@@ -65,18 +59,31 @@
     </header>
 
     <main class="container" id="app">
-      <section class="section hero animate-rise">
-        <p class="eyebrow">US index ETFs</p>
-        <h1>SPY and QQQ, stock by stock.</h1>
-        <p class="hero__lede">
-          Every holding and its weight, from the latest issuer and SEC files.
-          Search both funds at once.
-        </p>
-      </section>
+      <h1 class="visually-hidden">SPY-QQQ Holdings</h1>
 
       <section class="section animate-rise" aria-labelledby="holdings-title">
         <div class="board-head">
-          <h2 id="holdings-title">Holdings</h2>
+          <h2 id="holdings-title" class="visually-hidden">Holdings</h2>
+          <div class="view-toggle" role="group" aria-label="Holdings view">
+            <button
+              class="view-toggle__btn"
+              type="button"
+              data-view="stocks"
+              aria-pressed="true"
+              disabled
+            >
+              Ticker
+            </button>
+            <button
+              class="view-toggle__btn"
+              type="button"
+              data-view="sectors"
+              aria-pressed="false"
+              disabled
+            >
+              Sector
+            </button>
+          </div>
           <p
             class="board-status"
             id="holdings-status"
@@ -106,6 +113,8 @@
           <article
             class="fund-panel"
             id="spy-panel"
+            data-fund="SPY"
+            data-collapsed="true"
             aria-labelledby="spy-name"
           >
             <header class="fund-panel__head">
@@ -113,6 +122,16 @@
                 <span class="fund-panel__ticker">SPY</span>
                 <h3 class="fund-panel__name" id="spy-name">SPY</h3>
                 <span class="fund-panel__count" id="spy-count">&mdash;</span>
+                <button
+                  class="fund-panel__toggle"
+                  id="spy-toggle"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="spy-scroll"
+                  aria-label="SPY show holdings"
+                >
+                  <span class="fund-panel__chevron" aria-hidden="true"></span>
+                </button>
               </div>
               <p class="fund-panel__meta">
                 <span
@@ -124,7 +143,6 @@
                 >
                 <span id="spy-source">&mdash;</span>
               </p>
-              <p class="fund-panel__note" id="spy-note"></p>
             </header>
 
             <div
@@ -135,13 +153,15 @@
               tabindex="0"
             >
               <table class="table">
-                <caption class="visually-hidden">
+                <caption class="visually-hidden" id="spy-caption">
                   SPY holdings and weights
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col" class="col-rank">Rank</th>
-                    <th scope="col" class="col-asset">Holding</th>
+                    <th scope="col" class="col-asset table__asset-head">
+                      Holding
+                    </th>
                     <th scope="col" class="is-numeric">Weight</th>
                   </tr>
                 </thead>
@@ -167,6 +187,8 @@
           <article
             class="fund-panel fund-panel--qqq"
             id="qqq-panel"
+            data-fund="QQQ"
+            data-collapsed="true"
             aria-labelledby="qqq-name"
           >
             <header class="fund-panel__head">
@@ -174,6 +196,16 @@
                 <span class="fund-panel__ticker">QQQ</span>
                 <h3 class="fund-panel__name" id="qqq-name">QQQ</h3>
                 <span class="fund-panel__count" id="qqq-count">&mdash;</span>
+                <button
+                  class="fund-panel__toggle"
+                  id="qqq-toggle"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="qqq-scroll"
+                  aria-label="QQQ show holdings"
+                >
+                  <span class="fund-panel__chevron" aria-hidden="true"></span>
+                </button>
               </div>
               <p class="fund-panel__meta">
                 <span
@@ -185,7 +217,6 @@
                 >
                 <span id="qqq-source">&mdash;</span>
               </p>
-              <p class="fund-panel__note" id="qqq-note"></p>
             </header>
 
             <div
@@ -196,13 +227,15 @@
               tabindex="0"
             >
               <table class="table">
-                <caption class="visually-hidden">
+                <caption class="visually-hidden" id="qqq-caption">
                   QQQ holdings and weights
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col" class="col-rank">Rank</th>
-                    <th scope="col" class="col-asset">Holding</th>
+                    <th scope="col" class="col-asset table__asset-head">
+                      Holding
+                    </th>
                     <th scope="col" class="is-numeric">Weight</th>
                   </tr>
                 </thead>
@@ -231,41 +264,7 @@
     <footer class="footer">
       <div class="container footer__inner">
         <span>SPY-QQQ Holdings</span>
-        <span class="footer__credit">
-          Holdings data by
-          <a
-            class="footer__link"
-            href="https://tickerinside.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >TickerInside</a
-          >
-          under
-          <a
-            class="footer__link"
-            href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >CC BY 4.0</a
-          >.
-          <a
-            class="footer__link"
-            id="spy-credit"
-            href="https://tickerinside.com/etf/spy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >SPY source</a
-          >
-          <span aria-hidden="true">&middot;</span>
-          <a
-            class="footer__link"
-            id="qqq-credit"
-            href="https://tickerinside.com/etf/qqq/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >QQQ source</a
-          >
-        </span>
+        <span class="footer__credit">Data provided by TickerInside</span>
         <span class="numeric" id="footer-year"></span>
       </div>
     </footer>
