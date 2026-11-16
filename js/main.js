@@ -11,6 +11,7 @@
  * @property {(fund: Fund, refs: FundRefs, maxWeight: number) => FundList} [renderFund] - Draw one stock fund.
  * @property {(fund: SectorFund, refs: FundRefs, maxWeight: number) => FundList} [renderSectorFund] - Draw one sector fund.
  * @property {(config: FundConfig, refs: FundRefs, error: unknown) => void} [renderFundError] - Report a failed fund.
+ * @property {string} [version] - The release version.
  */
 
 /**
@@ -120,11 +121,29 @@
   };
 
   /**
+   * Write the release version into the footer brand slot.
+   * @returns {void}
+   */
+  const stampVersion = () => {
+    const slot = document.getElementById("footer-brand");
+    const ns = page.SPYQQQ;
+    const version = ns ? ns.version : undefined;
+    if (
+      slot instanceof HTMLElement &&
+      typeof version === "string" &&
+      version !== ""
+    ) {
+      slot.textContent = `SPY-QQQ Holdings ${version}`;
+    }
+  };
+
+  /**
    * Load the data and start the page.
    * @returns {Promise<void>} A promise that settles after the first draw.
    */
   const init = async () => {
     stampYear();
+    stampVersion();
 
     const ns = page.SPYQQQ;
     if (

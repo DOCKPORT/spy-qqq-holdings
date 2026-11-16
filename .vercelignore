@@ -10,3 +10,4 @@ memory-bank/
 logos/
 __pycache__/
 *.pyc
+.github/

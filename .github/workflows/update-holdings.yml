@@ -1,0 +1,137 @@
+name: Update holdings data
+
+# TickerInside builds on weekday nights and is due by 02:00 UTC.
+# The 06:00 UTC run gives a four-hour buffer.
+on:
+  schedule:
+    - cron: "0 6 * * 2-6"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One run at a time, so two runs cannot write the data folder together.
+concurrency:
+  group: update-holdings
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    name: Fetch the holdings data
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements.txt
+
+      - name: Install the requirements
+        run: python -m pip install --requirement requirements.txt
+
+      - name: Fetch the holdings
+        run: python scripts/fetch_holdings.py
+
+      # Never publish a broken file. Read every output before the commit.
+      - name: Check the JSON output
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          HOLDINGS = {
+              "data/spy.json": "SPY",
+              "data/qqq.json": "QQQ",
+          }
+          SECTORS = {
+              "data/spy_sector.json": "SPY",
+              "data/qqq_sector.json": "QQQ",
+          }
+
+          def load(name):
+              path = Path(name)
+              if not path.is_file():
+                  raise SystemExit(f"Error: {name} is missing.")
+              text = path.read_text(encoding="utf-8")
+              if not text.strip():
+                  raise SystemExit(f"Error: {name} is empty.")
+              data = json.loads(text)
+              if not isinstance(data, dict):
+                  raise SystemExit(f"Error: {name} holds no object.")
+              print(f"{name}: valid JSON")
+              return data
+
+          for name, ticker in HOLDINGS.items():
+              data = load(name)
+              if data.get("ticker") != ticker:
+                  raise SystemExit(f"Error: {name} holds the wrong ticker.")
+              rows = data.get("holdings")
+              if not isinstance(rows, list) or not rows:
+                  raise SystemExit(f"Error: {name} holds no holding row.")
+              for row in rows:
+                  weight = row.get("weightPct") if isinstance(row, dict) else None
+                  if (
+                      not isinstance(weight, (int, float))
+                      or isinstance(weight, bool)
+                      or weight <= 0
+                  ):
+                      raise SystemExit(f"Error: {name} holds a bad weight.")
+                  symbol = row.get("symbol") if isinstance(row, dict) else None
+                  if not isinstance(symbol, str) or not symbol:
+                      raise SystemExit(f"Error: {name} holds a bad symbol.")
+              print(f"{name}: {len(rows)} holdings")
+
+          for name, ticker in SECTORS.items():
+              data = load(name)
+              if data.get("ticker") != ticker:
+                  raise SystemExit(f"Error: {name} holds the wrong ticker.")
+              rows = data.get("sectors")
+              if not isinstance(rows, list) or not rows:
+                  raise SystemExit(f"Error: {name} holds no sector row.")
+              for row in rows:
+                  weight = row.get("weightPct") if isinstance(row, dict) else None
+                  if (
+                      not isinstance(weight, (int, float))
+                      or isinstance(weight, bool)
+                      or weight < 0
+                  ):
+                      raise SystemExit(f"Error: {name} holds a bad weight.")
+                  key = row.get("key") if isinstance(row, dict) else None
+                  label = row.get("label") if isinstance(row, dict) else None
+                  if not isinstance(key, str) or not key:
+                      raise SystemExit(f"Error: {name} holds a bad sector key.")
+                  if not isinstance(label, str) or not label:
+                      raise SystemExit(f"Error: {name} holds a bad sector label.")
+              print(f"{name}: {len(rows)} sectors")
+          PY
+
+      - name: Commit and push the data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # A scheduled run can start on a detached head, so name the branch.
+          git checkout -B "$GITHUB_REF_NAME"
+
+          git add -- data
+          if git diff --cached --quiet; then
+            echo "No data change. Nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "Update the holdings data" -m "Run: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          # Another commit can land while this run works. Rebase, then push.
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "$GITHUB_REF_NAME"
+
+          echo "Pushed the data snapshot to $GITHUB_REF_NAME."

@@ -124,7 +124,7 @@
 
   /* Scrollbars. The standard properties read these two values.
      The clear track lets the surface show through the rail. */
-  --scrollbar-thumb: var(--border-strong);
+  --scrollbar-thumb: var(--border);
   --scrollbar-track: transparent;
 
   /* Text */
