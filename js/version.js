@@ -18,7 +18,7 @@
   const ns = page.SPYQQQ || (page.SPYQQQ = {});
 
   /** The current release version. Bump this value and the git tag together. */
-  const VERSION = "v1.0.0";
+  const VERSION = "v1.0.1";
 
   ns.version = VERSION;
 })();
