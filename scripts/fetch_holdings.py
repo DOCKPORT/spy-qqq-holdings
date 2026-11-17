@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -169,8 +170,11 @@ def main() -> int:
         return 1
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     for ticker, fund, sector, weight_sum in funds:
+        fund["generatedAt"] = generated_at
+        sector["generatedAt"] = generated_at
         holdings_path = DATA_DIR / f"{ticker.lower()}.json"
         sector_path = DATA_DIR / f"{ticker.lower()}_sector.json"
         try:
