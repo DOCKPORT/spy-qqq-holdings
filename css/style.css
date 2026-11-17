@@ -100,6 +100,13 @@
   text-align: end;
 }
 
+.board-updated {
+  margin: 0;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
 /* --- View toggle ---------------------------------------------------------- */
 .view-toggle {
   display: inline-flex;

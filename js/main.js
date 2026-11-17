@@ -137,6 +137,30 @@
     }
   };
 
+  const UPDATED_FORMAT = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "UTC",
+    timeZoneName: "short",
+  });
+
+  /**
+   * Format an ISO timestamp without a time shift.
+   * @param {string} value - The ISO timestamp.
+   * @returns {string} The display date and time.
+   */
+  const formatUpdated = (value) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+    return UPDATED_FORMAT.format(date);
+  };
+
   /**
    * Load the data and start the page.
    * @returns {Promise<void>} A promise that settles after the first draw.
@@ -169,6 +193,7 @@
     const refs = panelRefs();
     const input = requireInput("holdings-search");
     const status = requireElement("holdings-status");
+    const updatedSlot = requireElement("holdings-updated");
 
     const [stockResults, sectorResults] = await Promise.all([
       Promise.allSettled(stockConfigs.map((config) => loadFund(config))),
@@ -206,6 +231,18 @@
 
     fillMaps(stockConfigs, stockResults, stockFunds, stockFailures);
     fillMaps(sectorConfigs, sectorResults, sectorFunds, sectorFailures);
+
+    const generatedTimes = [
+      ...[...stockFunds.values()].map((fund) => fund.generatedAt),
+      ...[...sectorFunds.values()].map((fund) => fund.generatedAt),
+    ].filter((value) => value !== "");
+    if (generatedTimes.length === 0) {
+      updatedSlot.textContent = "Updated \u2014";
+    } else {
+      generatedTimes.sort();
+      const newest = generatedTimes[generatedTimes.length - 1];
+      updatedSlot.textContent = `Updated ${formatUpdated(newest)}`;
+    }
 
     /**
      * Draw the panels for one view.

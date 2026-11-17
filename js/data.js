@@ -15,6 +15,7 @@
  * @property {string} name - The fund name.
  * @property {string} holdingsAsOf - The date of the holdings file.
  * @property {string} source - "issuer" or "sec_nport".
+ * @property {string} generatedAt - When the script wrote the file.
  * @property {string} pageUrl - The TickerInside page.
  * @property {string} cite - The credit line.
  * @property {Holding[]} holdings - The holding rows.
@@ -33,6 +34,7 @@
  * @property {string} name - The fund name.
  * @property {string} holdingsAsOf - The date of the holdings file.
  * @property {string} source - "issuer" or "sec_nport".
+ * @property {string} generatedAt - When the script wrote the file.
  * @property {number | null} sectorCoveragePct - The share of the fund with a sector.
  * @property {number | null} noSectorPct - The share with no sector.
  * @property {number | null} weightSumPct - The sum of the sector weights.
@@ -159,6 +161,8 @@
       holdingsAsOf:
         typeof raw.holdingsAsOf === "string" ? raw.holdingsAsOf : "",
       source: typeof raw.source === "string" ? raw.source : "",
+      generatedAt:
+        typeof raw.generatedAt === "string" ? raw.generatedAt : "",
       pageUrl: typeof raw.pageUrl === "string" ? raw.pageUrl : "",
       cite: typeof raw.cite === "string" ? raw.cite : "",
       holdings,
@@ -196,6 +200,8 @@
       holdingsAsOf:
         typeof raw.holdingsAsOf === "string" ? raw.holdingsAsOf : "",
       source: typeof raw.source === "string" ? raw.source : "",
+      generatedAt:
+        typeof raw.generatedAt === "string" ? raw.generatedAt : "",
       sectorCoveragePct:
         typeof raw.sectorCoveragePct === "number"
           ? raw.sectorCoveragePct
