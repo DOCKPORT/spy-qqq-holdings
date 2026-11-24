@@ -1,67 +1,67 @@
 {
   "ticker": "SPY",
   "name": "SPDR S&P 500 ETF Trust",
-  "holdingsAsOf": "2026-11-19",
+  "holdingsAsOf": "2026-11-20",
   "source": "issuer",
   "sectorCoveragePct": 100.0,
   "noSectorPct": 0.0,
-  "weightSumPct": 99.821,
+  "weightSumPct": 99.8132,
   "sectors": [
     {
       "key": "technology",
       "label": "Technology",
-      "weightPct": 35.4964
+      "weightPct": 34.2342
     },
     {
       "key": "financials",
       "label": "Financials",
-      "weightPct": 12.6062
+      "weightPct": 12.8574
     },
     {
       "key": "health_care",
       "label": "Health care",
-      "weightPct": 10.3567
+      "weightPct": 10.7356
     },
     {
       "key": "consumer_discretionary",
       "label": "Consumer discretionary",
-      "weightPct": 9.67
+      "weightPct": 9.6887
     },
     {
       "key": "communication_services",
       "label": "Communication services",
-      "weightPct": 8.7918
+      "weightPct": 8.8439
     },
     {
       "key": "industrials",
       "label": "Industrials",
-      "weightPct": 8.2597
+      "weightPct": 8.3097
     },
     {
       "key": "consumer_staples",
       "label": "Consumer staples",
-      "weightPct": 5.2999
+      "weightPct": 5.5403
     },
     {
       "key": "energy",
       "label": "Energy",
-      "weightPct": 3.5586
+      "weightPct": 3.6816
     },
     {
       "key": "utilities",
       "label": "Utilities",
-      "weightPct": 2.1732
+      "weightPct": 2.2392
     },
     {
       "key": "real_estate",
       "label": "Real estate",
-      "weightPct": 1.884
+      "weightPct": 1.9346
     },
     {
       "key": "materials",
       "label": "Materials",
-      "weightPct": 1.7245
+      "weightPct": 1.748
     }
   ],
-  "generatedAt": "2026-11-21T14:01:45Z"
+  "generatedAt": "2026-11-24T16:51:40Z"
 }
