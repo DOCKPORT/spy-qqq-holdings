@@ -15,7 +15,7 @@
     {
       "key": "communication_services",
       "label": "Communication services",
-      "weightPct": 12.7694
+      "weightPct": 12.9042
     },
     {
       "key": "consumer_discretionary",
@@ -35,7 +35,7 @@
     {
       "key": "industrials",
       "label": "Industrials",
-      "weightPct": 3.4479
+      "weightPct": 3.3131
     },
     {
       "key": "utilities",
@@ -58,5 +58,5 @@
       "weightPct": 0.165
     }
   ],
-  "generatedAt": "2026-11-25T16:39:55Z"
+  "generatedAt": "2026-11-26T16:13:18Z"
 }
